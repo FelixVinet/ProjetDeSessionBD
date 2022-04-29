@@ -1,0 +1,152 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using BDProjetSession.Models;
+
+namespace BDProjetSession.Controllers
+{
+    public class PhotographesController : Controller
+    {
+        private readonly H22_4D5_Projet_sessionContext _context;
+
+        public PhotographesController(H22_4D5_Projet_sessionContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Photographes
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Photographes.ToListAsync());
+        }
+
+        // GET: Photographes/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var photographe = await _context.Photographes
+                .FirstOrDefaultAsync(m => m.PhotographeId == id);
+            if (photographe == null)
+            {
+                return NotFound();
+            }
+
+            return View(photographe);
+        }
+
+        // GET: Photographes/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Photographes/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("PhotographeId,Nom")] Photographe photographe)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(photographe);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(photographe);
+        }
+
+        // GET: Photographes/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var photographe = await _context.Photographes.FindAsync(id);
+            if (photographe == null)
+            {
+                return NotFound();
+            }
+            return View(photographe);
+        }
+
+        // POST: Photographes/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("PhotographeId,Nom")] Photographe photographe)
+        {
+            if (id != photographe.PhotographeId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(photographe);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!PhotographeExists(photographe.PhotographeId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(photographe);
+        }
+
+        // GET: Photographes/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var photographe = await _context.Photographes
+                .FirstOrDefaultAsync(m => m.PhotographeId == id);
+            if (photographe == null)
+            {
+                return NotFound();
+            }
+
+            return View(photographe);
+        }
+
+        // POST: Photographes/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var photographe = await _context.Photographes.FindAsync(id);
+            _context.Photographes.Remove(photographe);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool PhotographeExists(int id)
+        {
+            return _context.Photographes.Any(e => e.PhotographeId == id);
+        }
+    }
+}

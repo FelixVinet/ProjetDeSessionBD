@@ -1,0 +1,77 @@
+﻿@model IEnumerable<BDProjetSession.Models.RendezVou>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DateRendezVous)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Commentaire)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HeureDebut)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Justification)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatutPhoto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CommentairePhotos)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HeureFin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Propriete)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateRendezVous)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Commentaire)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HeureDebut)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Justification)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatutPhoto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CommentairePhotos)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HeureFin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Propriete.Adresse)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RendezVousId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.RendezVousId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.RendezVousId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
