@@ -12,6 +12,19 @@ namespace BDProjetSession.Models
             Disponibilites = new HashSet<Disponibilite>();
             Photos = new HashSet<Photo>();
         }
+        public RendezVou(int id,DateTime dateRendezvous,string commentaire,int proprieteId,TimeSpan heureDebut,string justification,string statutPhoto,string commentairePhotos,TimeSpan heurefin)
+        {
+            RendezVousId = id;
+            DateRendezVous = dateRendezvous;
+            Commentaire = commentaire;
+            ProprieteId = proprieteId;
+            HeureDebut = heureDebut;
+            Justification = justification;
+            StatutPhoto = statutPhoto;
+            CommentairePhotos = commentairePhotos;
+            HeureFin = heurefin;
+        }
+
 
         public int RendezVousId { get; set; }
         public DateTime DateRendezVous { get; set; }

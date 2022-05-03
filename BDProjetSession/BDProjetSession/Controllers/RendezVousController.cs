@@ -60,8 +60,10 @@ namespace BDProjetSession.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 _context.Add(rendezVou);
                 await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProprieteId"] = new SelectList(_context.Proprietes, "ProprieteId", "Adresse", rendezVou.ProprieteId);

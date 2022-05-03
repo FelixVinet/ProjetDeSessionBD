@@ -62,6 +62,7 @@ namespace BDProjetSession.Controllers
         {
             if (ModelState.IsValid)
             {
+                disponibilite.RendezVousId = null;
                 _context.Add(disponibilite);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
