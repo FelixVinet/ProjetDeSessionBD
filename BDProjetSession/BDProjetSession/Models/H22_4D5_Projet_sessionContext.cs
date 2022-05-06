@@ -144,38 +144,38 @@ namespace BDProjetSession.Models
 
                 entity.ToTable("RendezVous", "Disponibilites");
 
-                entity.HasIndex(e => e.ProprieteId, "IX_rv_proprieteID");
+                entity.HasIndex(e => e.proprieteID, "IX_rv_proprieteID");
 
                 entity.Property(e => e.RendezVousId).HasColumnName("rendezVousID");
 
-                entity.Property(e => e.Commentaire)
+                entity.Property(e => e.commentaire)
                     .HasMaxLength(250)
                     .HasColumnName("commentaire");
 
-                entity.Property(e => e.CommentairePhotos)
+                entity.Property(e => e.commentairePhotos)
                     .HasMaxLength(250)
                     .HasColumnName("commentairePhotos");
 
-                entity.Property(e => e.DateRendezVous).HasColumnName("dateRendezVous");
+                entity.Property(e => e.dateRendezvous).HasColumnName("dateRendezVous");
 
-                entity.Property(e => e.HeureDebut).HasColumnName("heureDebut");
+                entity.Property(e => e.heureDebut).HasColumnName("heureDebut");
 
                 entity.Property(e => e.HeureFin).HasComputedColumnSql("([Disponibilites].[ufnCalcHeureFin]([heureDebut]))", false);
 
-                entity.Property(e => e.Justification)
+                entity.Property(e => e.justification)
                     .HasMaxLength(250)
                     .HasColumnName("justification");
 
-                entity.Property(e => e.ProprieteId).HasColumnName("proprieteID");
+                entity.Property(e => e.proprieteID).HasColumnName("proprieteID");
 
-                entity.Property(e => e.StatutPhoto)
+                entity.Property(e => e.statutPhoto)
                     .HasMaxLength(30)
                     .HasColumnName("statutPhoto")
                     .HasDefaultValueSql("('Aucune')");
 
                 entity.HasOne(d => d.Propriete)
                     .WithMany(p => p.RendezVous)
-                    .HasForeignKey(d => d.ProprieteId)
+                    .HasForeignKey(d => d.proprieteID)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_proprieteID");
             });

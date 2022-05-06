@@ -14,48 +14,12 @@ namespace BDProjetSession.Controllers
     public class PhotographesController : Controller
     {
         private readonly H22_4D5_Projet_sessionContext _context;
-        private IConfiguration _configuration;
-        private SqlConnection connectionVotreBDSQL;
 
         public PhotographesController(H22_4D5_Projet_sessionContext context)
         {
             _context = context;
         }
-        public IActionResult OnGet(DateTime dateDebut,DateTime dateFin,int photographeId)
-        {
-            ViewData["Photographes"] = new SelectList(_context.Photographes, "Id", "Nom", photographeId);
-            connectionVotreBDSQL = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-            connectionVotreBDSQL.Open();
-
-            SqlCommand commandSQL = connectionVotreBDSQL.CreateCommand();
-            commandSQL.CommandText = "EXEC Disponibilites.uspListRDV @dateDebut = '"+ dateDebut + "', @dateFin = '"+ dateFin+"',@id = " + photographeId;
-            SqlDataReader resultat = commandSQL.ExecuteReader();
-
-            //demande de l'aide
-           /* List<RendezVou> rendezVous = new List<RendezVou>();
-            while (resultat.Read())
-            {
-                Propriete propriete = new Propriete();
-                foreach(var item in _context.Proprietes)
-                {
-                    if (item.ProprieteId == int.Parse(resultat["photographeID"].ToString()))
-                    {
-                        propriete = item;
-                    }
-                    
-                }
-                RendezVou rendezVou = new RendezVou();
-                foreach (var item in _context.RendezVous)
-                {
-                    if (item.RendezVousId == int.Parse(resultat["rendexVousID"].ToString()))
-                    {
-                        rendezVou = item;
-                    }
-                }
-            }
-
-            rendezVous.Add(new  )
-        }*/
+        
         // GET: Photographes
         public async Task<IActionResult> Index()
         {

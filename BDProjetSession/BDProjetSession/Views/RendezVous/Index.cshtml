@@ -9,26 +9,42 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form action="RendezVous/OnGet">
+    <div class="form-group row">
+        <div class="col">
+            <input placeholder="DateDébut" type="datetime-local" value="@ViewData["dateDebut"]" id="dateDébut" name="dateDébut" class="form-control" required />
+        </div>
+        <div class="col">
+            <input placeholder="DateFin" type="datetime-local" value="@ViewData["dateFin"]" id="dateFin" name="dateFin" class="form-control" required />
+        </div>
+        <div class="col">
+            <select class="form-control" name="photographeID" value="ViewBag.PhotographeId" asp-items="ViewBag.Photographes" required></select>
+        </div>
+        <div class="col">
+           <button class="btn btn-info" type="submit">Filtrer</button>
+        </div>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.DateRendezVous)
+                @Html.DisplayNameFor(model => model.dateRendezvous)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Commentaire)
+                @Html.DisplayNameFor(model => model.commentaire)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.HeureDebut)
+                @Html.DisplayNameFor(model => model.heureDebut)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Justification)
+                @Html.DisplayNameFor(model => model.justification)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StatutPhoto)
+                @Html.DisplayNameFor(model => model.statutPhoto)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CommentairePhotos)
+                @Html.DisplayNameFor(model => model.commentairePhotos)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.HeureFin)
@@ -40,25 +56,32 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+        @foreach (var item in Model)
+        {
+            if (Model == null)
+            {
+                <h2>Aucun rendez-vous</h2>
+            }
+            else
+            {
+                <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.DateRendezVous)
+                @Html.DisplayFor(modelItem => item.dateRendezvous)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Commentaire)
+                @Html.DisplayFor(modelItem => item.commentaire)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.HeureDebut)
+                @Html.DisplayFor(modelItem => item.heureDebut)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Justification)
+                @Html.DisplayFor(modelItem => item.justification)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StatutPhoto)
+                @Html.DisplayFor(modelItem => item.statutPhoto)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CommentairePhotos)
+                @Html.DisplayFor(modelItem => item.commentairePhotos)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.HeureFin)
@@ -71,7 +94,9 @@
                 <a asp-action="Details" asp-route-id="@item.RendezVousId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.RendezVousId">Delete</a>
             </td>
-        </tr>
-}
-    </tbody>
-</table>
+            </tr>
+        }
+        
+        }
+        </tbody>
+    </table>

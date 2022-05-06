@@ -6,22 +6,72 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDProjetSession.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
 
 namespace BDProjetSession.Controllers
 {
     public class RendezVousController : Controller
     {
         private readonly H22_4D5_Projet_sessionContext _context;
+        private IConfiguration _configuration;
+        private SqlConnection connectionVotreBDSQL;
 
         public RendezVousController(H22_4D5_Projet_sessionContext context)
         {
             _context = context;
+        }
+        public IActionResult OnGet(DateTime dateDebut, DateTime dateFin, int photographeId)
+        {
+            ViewData["Photographes"] = new SelectList(_context.Photographes, "PhotographeID", "Nom", photographeId);
+            connectionVotreBDSQL = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+            connectionVotreBDSQL.Open();
+
+            SqlCommand commandSQL = connectionVotreBDSQL.CreateCommand();
+            commandSQL.CommandText = "EXEC Disponibilites.uspListRDV @dateDebut = '" + dateDebut + "', @dateFin = '" + dateFin + "',@id = " + photographeId;
+            SqlDataReader resultat = commandSQL.ExecuteReader();
+
+            //demande de l'aide
+            List<RendezVou> rendezVousList = new List<RendezVou>();
+            while (resultat.Read())
+            {
+                RendezVou rendezVou = _context.RendezVous.Find(int.Parse(resultat["RendezVousID"].ToString()));
+                // public RendezVou(int id, DateTime dateRendezvous, string commentaire, int proprieteId, TimeSpan heureDebut, string justification, string statutPhoto, string commentairePhotos, TimeSpan heurefin)
+                rendezVousList.Add(new RendezVou(
+                    int.Parse(resultat["RendezVousID"].ToString()),
+                    DateTime.Parse(resultat["dateRendezvous"].ToString()),
+                    resultat["commentaire"].ToString(),
+                    int.Parse(resultat["proprieteID"].ToString()),
+                    TimeSpan.Parse(resultat["heureDebut"].ToString()),
+                    resultat["justification"].ToString(),
+                    resultat["statutPhoto"].ToString(),
+                    resultat["commentairePhotos"].ToString(),
+                    TimeSpan.Parse(resultat["HeureFin"].ToString())
+                    ));
+
+
+            };
+            resultat.Close();
+
+            ViewData["dateDebut"] = dateDebut.ToString("s");
+            ViewData["dateFin"] = dateFin.ToString("s");
+            ViewData["id"] = photographeId;
+
+            if (rendezVousList.Count != 0)
+            {
+                return View("Index", rendezVousList);
+            }
+            else
+            {
+                return View("Index");
+            }
         }
 
         // GET: RendezVous
         public async Task<IActionResult> Index()
         {
             var h22_4D5_Projet_sessionContext = _context.RendezVous.Include(r => r.Propriete);
+            ViewData["Photographes"] = new SelectList(_context.Photographes, "PhotographeId", "Nom");
             return View(await h22_4D5_Projet_sessionContext.ToListAsync());
         }
 
@@ -66,7 +116,7 @@ namespace BDProjetSession.Controllers
                 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProprieteId"] = new SelectList(_context.Proprietes, "ProprieteId", "Adresse", rendezVou.ProprieteId);
+            ViewData["ProprieteId"] = new SelectList(_context.Proprietes, "ProprieteId", "Adresse", rendezVou.proprieteID);
             return View(rendezVou);
         }
 
@@ -83,7 +133,7 @@ namespace BDProjetSession.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProprieteId"] = new SelectList(_context.Proprietes, "ProprieteId", "Adresse", rendezVou.ProprieteId);
+            ViewData["ProprieteId"] = new SelectList(_context.Proprietes, "ProprieteId", "Adresse", rendezVou.proprieteID);
             return View(rendezVou);
         }
 
@@ -119,7 +169,7 @@ namespace BDProjetSession.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProprieteId"] = new SelectList(_context.Proprietes, "ProprieteId", "Adresse", rendezVou.ProprieteId);
+            ViewData["ProprieteId"] = new SelectList(_context.Proprietes, "ProprieteId", "Adresse", rendezVou.proprieteID);
             return View(rendezVou);
         }
 
