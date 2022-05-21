@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDProjetSession.Models;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace BDProjetSession.Controllers
 {
@@ -56,13 +58,27 @@ namespace BDProjetSession.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PhotoId,Nom,RendezVousId")] Photo photo)
+        public async Task<IActionResult> Create([Bind("PhotoId,Nom,RendezVousId")] Photo photo, List<IFormFile> postedFiles)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(photo);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                string fileName = Path.GetFileName(postedFiles[0].FileName);
+                fileName = photo.RendezVousId + "_" + fileName;
+                using(FileStream stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), ".\\wwwroot\\images\\" + fileName), FileMode.Create))
+                {
+                    postedFiles[0].CopyTo(stream);
+                }
+                string ext = fileName.Split(".")[1].ToLower();
+                if(ext == "jpg"|| ext == "jpeg"|| ext == "png")
+                {
+                    photo.Nom = fileName;
+                    _context.Add(photo);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return View();
+                }
             }
             ViewData["RendezVousId"] = new SelectList(_context.RendezVous, "RendezVousId", "RendezVousId", photo.RendezVousId);
             return View(photo);

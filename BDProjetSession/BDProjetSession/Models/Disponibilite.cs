@@ -7,6 +7,16 @@ namespace BDProjetSession.Models
 {
     public partial class Disponibilite
     {
+        public Disponibilite(int DisponibiliteId, DateTime DateDisponibilite, int PhotographeId, TimeSpan HeureDebut, int? RendezVousId, string Statut, TimeSpan? HeureFin)
+        {
+            this.DisponibiliteId = DisponibiliteId;
+            this.DateDisponibilite = DateDisponibilite;
+            this.PhotographeId = PhotographeId;
+            this.HeureDebut = HeureDebut;
+            this.RendezVousId = RendezVousId;
+            this.Statut = Statut;
+            this.HeureFin = HeureFin;
+        }
         public int DisponibiliteId { get; set; }
         public DateTime DateDisponibilite { get; set; }
         public int PhotographeId { get; set; }

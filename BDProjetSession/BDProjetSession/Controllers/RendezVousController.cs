@@ -17,8 +17,9 @@ namespace BDProjetSession.Controllers
         private IConfiguration _configuration;
         private SqlConnection connectionVotreBDSQL;
 
-        public RendezVousController(H22_4D5_Projet_sessionContext context)
+        public RendezVousController(H22_4D5_Projet_sessionContext context, IConfiguration configuration)
         {
+            _configuration = configuration;
             _context = context;
         }
         public IActionResult OnGet(DateTime dateDebut, DateTime dateFin, int photographeId)

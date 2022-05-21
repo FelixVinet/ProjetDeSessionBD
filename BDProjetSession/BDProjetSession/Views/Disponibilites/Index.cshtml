@@ -9,57 +9,74 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DateDisponibilite)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HeureDebut)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Statut)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HeureFin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Photographe)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RendezVous)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateDisponibilite)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HeureDebut)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Statut)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HeureFin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Photographe.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RendezVous.RendezVousId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.DisponibiliteId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.DisponibiliteId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.DisponibiliteId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<form asp-action="OnGet" asp-controller="RendezVous" method="get">
+    <div class="form-group row">
+        <div class="col">
+            <input placeholder="DateDébut" type="datetime-local" value="@ViewData["dateDebut"]" id="dateDébut" name="dateDébut" class="form-control" required />
+        </div>
+        <div class="col">
+            <input placeholder="DateFin" type="datetime-local" value="@ViewData["dateFin"]" id="dateFin" name="dateFin" class="form-control" required />
+        </div>
+        <div class="col">
+            <select class="form-control" name="photographeID" value="ViewBag.PhotographeId" asp-items="ViewBag.Photographes" required></select>
+        </div>
+        <div class="col">
+            <button class="btn btn-info" type="submit">Filtrer</button>
+        </div>
+    </div>
+</form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateDisponibilite)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HeureDebut)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Statut)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HeureFin)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Photographe)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RendezVous)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateDisponibilite)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HeureDebut)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Statut)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HeureFin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Photographe.Nom)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RendezVous.RendezVousId)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.DisponibiliteId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.DisponibiliteId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.DisponibiliteId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

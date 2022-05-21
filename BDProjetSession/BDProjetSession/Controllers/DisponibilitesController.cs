@@ -6,16 +6,64 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDProjetSession.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
 
 namespace BDProjetSession.Controllers
 {
     public class DisponibilitesController : Controller
     {
         private readonly H22_4D5_Projet_sessionContext _context;
+        private IConfiguration _configuration;
+        private SqlConnection connectionVotreBDSQL;
 
-        public DisponibilitesController(H22_4D5_Projet_sessionContext context)
+        public DisponibilitesController(H22_4D5_Projet_sessionContext context, IConfiguration configuration)
         {
+            _configuration = configuration;
             _context = context;
+        }
+        public IActionResult OnGet(DateTime dateDebut, DateTime dateFin, int photographeId)
+        {
+            ViewData["Photographes"] = new SelectList(_context.RendezVous, "PhotographeID", "Nom", photographeId);
+            connectionVotreBDSQL = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+            connectionVotreBDSQL.Open();
+
+            SqlCommand commandSQL = connectionVotreBDSQL.CreateCommand();
+            commandSQL.CommandText = "EXEC Disponibilites.uspListRDV @dateDebut = '" + dateDebut + "', @dateFin = '" + dateFin + "',@id = " + photographeId;
+            SqlDataReader resultat = commandSQL.ExecuteReader();
+
+            //demande de l'aide
+            List<Disponibilite> ListDispo = new List<Disponibilite>();
+            while (resultat.Read())
+            {
+                Disponibilite disponibilite = _context.Disponibilites.Find(int.Parse(resultat["DisponibiliteId"].ToString()));
+                
+                    ListDispo.Add(new Disponibilite(
+                    int.Parse(resultat["DisponibiliteId"].ToString()),
+                    DateTime.Parse(resultat["DateDisponibilite"].ToString()),
+                    int.Parse(resultat["PhotographeId"].ToString()),
+                    TimeSpan.Parse(resultat["HeureDebut"].ToString()),
+                    int.Parse(resultat["RendezVousId"].ToString()),
+                    resultat["Statut"].ToString(),
+                    TimeSpan.Parse(resultat["HeureFin"].ToString())
+                    ));
+
+
+            };
+            resultat.Close();
+
+            ViewData["dateDebut"] = dateDebut.ToString("s");
+            ViewData["dateFin"] = dateFin.ToString("s");
+            ViewData["id"] = photographeId;
+
+            if (ListDispo.Count != 0)
+            {
+                return View("Index", ListDispo);
+            }
+            else
+            {
+                return View("Index");
+            }
         }
 
         // GET: Disponibilites
